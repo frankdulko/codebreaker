@@ -23,7 +23,7 @@ export default function NumberKey({ number }: TNumberKey) {
       }}
       disabled={isKeyDisabled}
     >
-      <Text>{number}</Text>
+      <Text style={styles.text}>{number}</Text>
     </TouchableOpacity>
   );
 
@@ -35,8 +35,12 @@ export default function NumberKey({ number }: TNumberKey) {
 const styles = StyleSheet.create({
   button: {
     alignItems: "center",
-    padding: 20,
+    padding: 16,
     borderRadius: 5,
     flex: 1,
+  },
+  text: {
+    fontSize: 22,
+    fontWeight: "900",
   },
 });

@@ -9,6 +9,7 @@ export interface GameState {
   currentIndex: number;
   shouldAnimateContainer: boolean;
   shouldAnimateReveal: boolean;
+  showWinLoseModal: boolean;
 }
 
 const initialState: GameState = {
@@ -31,6 +32,7 @@ const initialState: GameState = {
   currentIndex: 0,
   shouldAnimateContainer: false,
   shouldAnimateReveal: false,
+  showWinLoseModal: false,
 };
 
 export const gameSlice = createSlice({
@@ -67,12 +69,16 @@ export const gameSlice = createSlice({
           correctNumbers++;
         }
       }
-      state.answerMatrix[state.currentGuess][0] = correctPositions.toString();
-      state.answerMatrix[state.currentGuess][1] = correctNumbers.toString();
       state.shouldAnimateReveal = true;
-      if (state.currentIndex == 4) {
-        state.currentGuess += 1;
-        state.currentIndex = 0;
+      if (correctPositions == 4) {
+        state.showWinLoseModal = true;
+      } else {
+        state.answerMatrix[state.currentGuess][0] = correctPositions.toString();
+        state.answerMatrix[state.currentGuess][1] = correctNumbers.toString();
+        if (state.currentIndex == 4) {
+          state.currentGuess += 1;
+          state.currentIndex = 0;
+        }
       }
     },
     increment: (state) => {

@@ -31,7 +31,9 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack screenOptions={{ headerShown: false, gestureEnabled: false }} />
+        <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
+          <Stack.Screen name="result" options={{ presentation: "transparentModal" }} />
+        </Stack>
       </ThemeProvider>
     </Provider>
   );

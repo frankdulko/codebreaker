@@ -16,11 +16,18 @@ import NumberKey from "@/components/NumberKey";
 import { RootState } from "./store";
 import { HView } from "@/components/Views";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 export default function HomeScreen() {
   const currentGuess = useSelector((state: RootState) => state.game.currentGuess);
   const guessArray = useSelector((state: RootState) => state.game.guessMatrix[currentGuess]);
+  const showWinLoseModal = useSelector((state: RootState) => state.game.showWinLoseModal);
+
+  useEffect(() => {
+    if (showWinLoseModal) {
+      router.push("/result");
+    }
+  }, [showWinLoseModal]);
 
   const dispatch = useDispatch();
 
