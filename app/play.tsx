@@ -17,6 +17,7 @@ import { RootState } from "./store";
 import { HView } from "@/components/Views";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link, router } from "expo-router";
+import KeyButton from "@/components/KeyButton";
 
 export default function HomeScreen() {
   const currentGuess = useSelector((state: RootState) => state.game.currentGuess);
@@ -34,54 +35,56 @@ export default function HomeScreen() {
   const isEnterDisabled = guessArray.includes(" ");
 
   return (
-    <SafeAreaView style={{ marginHorizontal: 24 }}>
-      <HView>
-        <Link href={"/"} asChild>
-          <TouchableOpacity style={styles.iconButton}>
-            <MaterialIcons name="door-back" size={24} color="white" />
-          </TouchableOpacity>
-        </Link>
-      </HView>
-      <GuessRow guess={0} />
-      <GuessRow guess={1} />
-      <GuessRow guess={2} />
-      <GuessRow guess={3} />
-      <GuessRow guess={4} />
-      <View style={{ display: "flex", justifyContent: "space-evenly", gap: 16 }}>
-        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", gap: 16 }}>
-          <NumberKey number={"1"} />
-          <NumberKey number={"2"} />
-          <NumberKey number={"3"} />
-        </View>
-        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", gap: 16 }}>
-          <NumberKey number={"4"} />
-          <NumberKey number={"5"} />
-          <NumberKey number={"6"} />
-        </View>
-        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", gap: 16 }}>
-          <NumberKey number={"7"} />
-          <NumberKey number={"8"} />
-          <NumberKey number={"9"} />
-        </View>
-        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", gap: 16 }}>
-          <TouchableOpacity
-            style={[styles.enterButton, { backgroundColor: isEnterDisabled ? "#AAAAAA" : "#DDDDDD" }]}
-            onPress={() => {
-              dispatch(onEnterPressed());
-            }}
-            disabled={isEnterDisabled}
-          >
-            <Text>{"ENTER"}</Text>
-          </TouchableOpacity>
-          <NumberKey number={"0"} />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              dispatch(onBackPressed());
-            }}
-          >
-            <Ionicons name="backspace-outline" size={20} color="black" />
-          </TouchableOpacity>
+    <SafeAreaView style={{ marginHorizontal: 24, display: "flex", flex: 1, justifyContent: "space-between" }}>
+      <View>
+        <HView>
+          <Link href={"/"} asChild>
+            <TouchableOpacity style={styles.iconButton}>
+              <MaterialIcons name="door-back" size={24} color="white" />
+            </TouchableOpacity>
+          </Link>
+        </HView>
+        <GuessRow guess={0} />
+        <GuessRow guess={1} />
+        <GuessRow guess={2} />
+        <GuessRow guess={3} />
+        <GuessRow guess={4} />
+      </View>
+      <View>
+        <View style={{ display: "flex", gap: 8 }}>
+          <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", gap: 8 }}>
+            <NumberKey number={"1"} />
+            <NumberKey number={"2"} />
+            <NumberKey number={"3"} />
+          </View>
+          <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", gap: 8 }}>
+            <NumberKey number={"4"} />
+            <NumberKey number={"5"} />
+            <NumberKey number={"6"} />
+          </View>
+          <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", gap: 8 }}>
+            <NumberKey number={"7"} />
+            <NumberKey number={"8"} />
+            <NumberKey number={"9"} />
+          </View>
+          <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", gap: 8 }}>
+            <TouchableOpacity
+              onPress={() => {
+                dispatch(onEnterPressed());
+              }}
+              disabled={isEnterDisabled}
+            >
+              <KeyButton number={"ENT"} />
+            </TouchableOpacity>
+            <NumberKey number={"0"} />
+            <TouchableOpacity
+              onPress={() => {
+                dispatch(onBackPressed());
+              }}
+            >
+              <KeyButton number={"DEL"} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </SafeAreaView>
