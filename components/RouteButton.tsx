@@ -1,31 +1,31 @@
-import { Href, Link } from "expo-router";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { Href, Link } from 'expo-router';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 type TRouteButton = {
-  route: Href<string>;
+  route?: Href<string>;
+  onPress: () => void;
+  text: string;
 };
 
-export default function RouteButton({ route }: TRouteButton) {
+export default function RouteButton({ onPress, text }: TRouteButton) {
   return (
-    <Link href={route} asChild>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Play</Text>
-      </TouchableOpacity>
-    </Link>
+    <TouchableOpacity style={styles.button} onPress={onPress}>
+      <Text style={styles.buttonText}>{text}</Text>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   buttonText: {
     fontSize: 22,
-    fontWeight: "900",
-    color: "#FFFFFF",
+    fontWeight: '900',
+    color: '#FFFFFF',
     padding: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   button: {
-    backgroundColor: "#000000",
-    width: "100%",
+    backgroundColor: '#000000',
+    width: '100%',
     borderRadius: 100,
   },
 });

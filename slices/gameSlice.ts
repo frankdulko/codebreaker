@@ -1,46 +1,55 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+
+const totalTurns = 6;
+const totalNumsPerTurn = 4;
 
 export interface GameState {
   code: string[];
-  guessMatrix: [string[], string[], string[], string[], string[]];
-  answerMatrix: [string[], string[], string[], string[], string[]];
+  guessMatrix: [string[], string[], string[], string[], string[], string[]];
+  answerMatrix: [string[], string[], string[], string[], string[], string[]];
   currentGuess: number;
   currentIndex: number;
   shouldAnimateContainer: boolean;
   shouldAnimateReveal: boolean;
   showWinLoseModal: boolean;
+  shouldReset: boolean;
+  didWin: boolean;
 }
 
 const initialState: GameState = {
-  code: ["1", "2", "3", "4"],
+  code: ['1', '2', '3', '4'],
   guessMatrix: [
-    [" ", " ", " ", " "],
-    [" ", " ", " ", " "],
-    [" ", " ", " ", " "],
-    [" ", " ", " ", " "],
-    [" ", " ", " ", " "],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' '],
   ],
   answerMatrix: [
-    [" ", " "],
-    [" ", " "],
-    [" ", " "],
-    [" ", " "],
-    [" ", " "],
+    [' ', ' '],
+    [' ', ' '],
+    [' ', ' '],
+    [' ', ' '],
+    [' ', ' '],
+    [' ', ' '],
   ],
   currentGuess: 0,
   currentIndex: 0,
   shouldAnimateContainer: false,
   shouldAnimateReveal: false,
   showWinLoseModal: false,
+  shouldReset: false,
+  didWin: false,
 };
 
 export const gameSlice = createSlice({
-  name: "game",
+  name: 'game',
   initialState,
   reducers: {
     onNumberKeyPress: (state, key: PayloadAction<string>) => {
-      if (state.currentIndex < 4) {
+      if (state.currentIndex < totalNumsPerTurn) {
         state.shouldAnimateContainer = true;
         state.guessMatrix[state.currentGuess][state.currentIndex] = key.payload;
         state.currentIndex += 1;
@@ -53,33 +62,65 @@ export const gameSlice = createSlice({
     onBackPressed: (state) => {
       if (state.currentIndex > 0) {
         state.currentIndex -= 1;
-        state.guessMatrix[state.currentGuess][state.currentIndex] = " ";
+        state.guessMatrix[state.currentGuess][state.currentIndex] = ' ';
       }
     },
     onEnterPressed: (state) => {
       let correctPositions = 0;
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < totalNumsPerTurn; i++) {
         if (state.code[i] == state.guessMatrix[state.currentGuess][i]) {
           correctPositions++;
         }
       }
       let correctNumbers = 0;
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < totalNumsPerTurn; i++) {
         if (state.code.includes(state.guessMatrix[state.currentGuess][i])) {
           correctNumbers++;
         }
       }
       state.shouldAnimateReveal = true;
-      if (correctPositions == 4) {
+      state.answerMatrix[state.currentGuess][0] = correctPositions.toString();
+      state.answerMatrix[state.currentGuess][1] = correctNumbers.toString();
+      if (state.currentIndex == totalNumsPerTurn) {
+        state.currentGuess += 1;
+        state.currentIndex = 0;
+      }
+      if (correctPositions == totalNumsPerTurn) {
         state.showWinLoseModal = true;
+        state.didWin = true;
       } else {
-        state.answerMatrix[state.currentGuess][0] = correctPositions.toString();
-        state.answerMatrix[state.currentGuess][1] = correctNumbers.toString();
-        if (state.currentIndex == 4) {
-          state.currentGuess += 1;
-          state.currentIndex = 0;
+        if (state.currentGuess == totalTurns) {
+          state.showWinLoseModal = true;
         }
       }
+    },
+    resetGame: (state) => {
+      state.guessMatrix = [
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' '],
+      ];
+      state.answerMatrix = [
+        [' ', ' '],
+        [' ', ' '],
+        [' ', ' '],
+        [' ', ' '],
+        [' ', ' '],
+        [' ', ' '],
+      ];
+      state.currentGuess = 0;
+      state.currentIndex = 0;
+      state.shouldAnimateContainer = false;
+      state.shouldAnimateReveal = false;
+      state.showWinLoseModal = false;
+      state.shouldReset = true;
+    },
+    onReset: (state) => {
+      state.shouldReset = false;
+      state.didWin = false;
     },
     increment: (state) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -103,6 +144,16 @@ export const gameSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { onNumberKeyPress, onAnimationStarted, onBackPressed, onEnterPressed, increment, decrement, incrementByAmount } = gameSlice.actions;
+export const {
+  onNumberKeyPress,
+  onAnimationStarted,
+  onBackPressed,
+  onEnterPressed,
+  resetGame,
+  onReset,
+  increment,
+  decrement,
+  incrementByAmount,
+} = gameSlice.actions;
 
 export default gameSlice.reducer;
